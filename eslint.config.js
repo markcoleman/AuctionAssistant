@@ -27,6 +27,7 @@ module.exports = [
       prettier: prettier,
     },
     rules: {
+      ...typescriptEslint.configs.recommended.rules,
       'prettier/prettier': 'error',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
@@ -34,7 +35,6 @@ module.exports = [
         'error',
         { argsIgnorePattern: '^_' },
       ],
-      ...typescriptEslint.configs.recommended.rules,
     },
   },
 ];

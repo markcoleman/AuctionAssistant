@@ -18,7 +18,13 @@ describe('Upload Endpoint', () => {
     if (fs.existsSync(uploadDir)) {
       const files = fs.readdirSync(uploadDir);
       files.forEach((file) => {
-        fs.unlinkSync(path.join(uploadDir, file));
+        const filePath = path.join(uploadDir, file);
+        const stat = fs.statSync(filePath);
+        if (stat.isDirectory()) {
+          fs.rmSync(filePath, { recursive: true, force: true });
+        } else {
+          fs.unlinkSync(filePath);
+        }
       });
     }
   });
@@ -50,6 +56,8 @@ describe('Upload Endpoint', () => {
       );
       expect(response.body.file).toHaveProperty('mimetype', 'image/jpeg');
       expect(response.body.file).toHaveProperty('size');
+      expect(response.body.file).toHaveProperty('url');
+      expect(response.body.file).toHaveProperty('secureUrl');
       expect(response.body.file).toHaveProperty('uploadedAt');
 
       // Clean up test file

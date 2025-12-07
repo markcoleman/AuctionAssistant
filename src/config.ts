@@ -3,7 +3,7 @@
  * This file contains configuration settings for the AuctionAssistant application
  */
 
-import { StorageConfig, StorageProvider } from '../src/services/storageService';
+import { StorageConfig, StorageProvider } from './services/storageService';
 import path from 'path';
 
 export const config = {

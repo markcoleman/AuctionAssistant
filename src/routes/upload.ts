@@ -5,9 +5,14 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { upload } from '../middleware/fileUpload';
 import { validateFile } from '../utils/fileValidation';
+import { createStorageService } from '../services/storageService';
+import config from '../config';
 import multer from 'multer';
 
 const router = Router();
+
+// Initialize storage service
+const storageService = createStorageService(config.storage);
 
 /**
  * POST /upload
@@ -53,7 +58,7 @@ router.post(
       next();
     });
   },
-  (req: Request, res: Response): void => {
+  async (req: Request, res: Response): Promise<void> => {
     try {
       // Check if file was uploaded
       if (!req.file) {
@@ -72,6 +77,8 @@ router.post(
       });
 
       if (!validation.valid) {
+        // Cleanup temporary file
+        await storageService.cleanupTempFile(req.file.path);
         res.status(400).json({
           success: false,
           error: validation.error,
@@ -79,19 +86,50 @@ router.post(
         return;
       }
 
+      // Upload to cloud storage
+      const shouldOptimize =
+        process.env.NODE_ENV === 'production' ||
+        process.env.ENABLE_IMAGE_OPTIMIZATION === 'true';
+      const uploadResult = await storageService.uploadFile(
+        req.file.path,
+        req.file.mimetype,
+        {
+          optimize: shouldOptimize,
+          maxWidth: config.imageOptimization.maxWidth,
+          maxHeight: config.imageOptimization.maxHeight,
+          quality: config.imageOptimization.quality,
+        }
+      );
+
+      // Cleanup temporary file after successful upload
+      await storageService.cleanupTempFile(req.file.path);
+
+      // Generate secure URL with expiration
+      const secureUrl = await storageService.getSecureUrl(uploadResult.key, {
+        expiresIn: config.secureUrlExpiration,
+      });
+
       // Return success response with file information
       res.status(200).json({
         success: true,
         message: 'File uploaded successfully',
         file: {
-          id: req.file.filename,
+          id: uploadResult.key,
           originalName: req.file.originalname,
-          mimetype: req.file.mimetype,
-          size: req.file.size,
+          mimetype: uploadResult.contentType,
+          size: uploadResult.size,
+          url: uploadResult.url,
+          secureUrl: secureUrl,
           uploadedAt: new Date().toISOString(),
         },
       });
-    } catch {
+    } catch (error) {
+      // Cleanup temporary file on error
+      if (req.file) {
+        await storageService.cleanupTempFile(req.file.path);
+      }
+
+      console.error('Upload error:', error);
       res.status(500).json({
         success: false,
         error: 'Internal server error during file upload',
