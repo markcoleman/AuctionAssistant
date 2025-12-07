@@ -61,7 +61,7 @@ jobs:
           tar -czf ../deployment.tar.gz .
       
       - name: Upload deployment artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: deployment-package
           path: deployment.tar.gz
