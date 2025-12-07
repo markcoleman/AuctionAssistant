@@ -229,8 +229,14 @@ export class StorageService {
     try {
       await unlink(filePath);
     } catch (error) {
-      // Log but don't throw - file might already be deleted
-      console.error(`Failed to cleanup temp file ${filePath}:`, error);
+      // Ignore ENOENT errors - file might already be deleted
+      // Only log unexpected errors
+      if (error && typeof error === 'object' && 'code' in error) {
+        const fileError = error as { code: string };
+        if (fileError.code !== 'ENOENT') {
+          console.error(`Failed to cleanup temp file ${filePath}:`, error);
+        }
+      }
     }
   }
 
