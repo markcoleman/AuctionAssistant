@@ -6,6 +6,13 @@ import fs from 'fs';
 describe('Upload Endpoint', () => {
   const uploadDir = path.join(__dirname, '../uploads');
 
+  // Ensure uploads directory exists before tests
+  beforeAll(() => {
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+  });
+
   // Clean up uploaded files after each test
   afterEach(() => {
     if (fs.existsSync(uploadDir)) {

@@ -6,17 +6,26 @@ import multer, { FileFilterCallback } from 'multer';
 import { Request } from 'express';
 import path from 'path';
 import crypto from 'crypto';
+import fs from 'fs';
 import {
   isAllowedFileType,
   hasAllowedExtension,
   MAX_FILE_SIZE,
 } from '../utils/fileValidation';
 
+// Define uploads directory path
+const uploadsDir = path.join(__dirname, '../../uploads');
+
+// Ensure uploads directory exists
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 // Configure storage with unique filenames
 const storage = multer.diskStorage({
   destination: (_req: Request, _file: Express.Multer.File, cb) => {
     // Store files in a temporary uploads directory
-    cb(null, path.join(__dirname, '../../uploads'));
+    cb(null, uploadsDir);
   },
   filename: (_req: Request, file: Express.Multer.File, cb) => {
     // Generate unique filename with original extension
