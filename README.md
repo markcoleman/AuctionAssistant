@@ -107,6 +107,25 @@ npm run format
 - `GET /` - Welcome message and API status
 - `GET /health` - Health check endpoint
 
+## CI/CD
+
+This project uses GitHub Actions for continuous integration and deployment:
+
+- **Continuous Integration**: Automated testing, linting, type checking, and build verification on every push and PR
+- **Dependabot**: Automated dependency updates for npm packages and GitHub Actions
+- **Deployment**: Automated deployment workflow (configurable for your hosting provider)
+
+See [.github/WORKFLOWS.md](.github/WORKFLOWS.md) for detailed documentation about the CI/CD setup.
+
+### CI Status
+
+All code changes are automatically validated through our CI pipeline:
+- ✅ TypeScript type checking
+- ✅ ESLint code quality checks
+- ✅ Prettier formatting validation
+- ✅ Jest test suite
+- ✅ Build verification
+
 ## License
 
 ISC
