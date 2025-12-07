@@ -120,6 +120,12 @@ dist
 # Uploaded files
 uploads/
 
+# Test files created during test runs
+tests/*.jpg
+tests/*.png
+tests/*.webp
+tests/*.txt
+
 # Serverless directories
 .serverless/
 
