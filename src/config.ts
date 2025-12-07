@@ -43,9 +43,17 @@ export const config = {
     process.env.SECURE_URL_EXPIRATION || '3600',
     10
   ),
+  // AI Vision Configuration
+  ai: {
+    openai: {
+      apiKey: process.env.OPENAI_API_KEY || '',
+      model: process.env.OPENAI_VISION_MODEL || 'gpt-4o',
+      maxTokens: parseInt(process.env.OPENAI_MAX_TOKENS || '1500', 10),
+      temperature: parseFloat(process.env.OPENAI_TEMPERATURE || '0.3'),
+    },
+  },
   // Future configurations can be added here
   // database: { ... },
-  // ai: { ... },
 };
 
 export default config;
