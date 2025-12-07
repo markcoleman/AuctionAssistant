@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
+import uploadRouter from './routes/upload';
 
 // Load environment variables
 dotenv.config();
@@ -28,6 +29,9 @@ app.get('/health', (_req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Upload route
+app.use('/upload', uploadRouter);
 
 // Static files - serve after API routes
 app.use(express.static(path.join(__dirname, '../public')));
