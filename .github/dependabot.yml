@@ -1,0 +1,64 @@
+version: 2
+updates:
+  # Enable version updates for npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "markcoleman"
+    assignees:
+      - "markcoleman"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "npm"
+    ignore:
+      # Ignore major version updates for critical dependencies
+      # to avoid breaking changes
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      # Group TypeScript-related dependencies
+      typescript-ecosystem:
+        patterns:
+          - "typescript"
+          - "@types/*"
+          - "ts-*"
+      # Group linting and formatting dependencies
+      code-quality:
+        patterns:
+          - "eslint*"
+          - "prettier"
+          - "@typescript-eslint/*"
+      # Group testing dependencies
+      testing:
+        patterns:
+          - "jest"
+          - "@types/jest"
+          - "supertest"
+          - "@types/supertest"
+  
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "markcoleman"
+    assignees:
+      - "markcoleman"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
