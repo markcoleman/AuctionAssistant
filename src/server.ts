@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import uploadRouter from './routes/upload';
+import analyzeRouter from './routes/analyze';
 
 // Load environment variables
 dotenv.config();
@@ -32,6 +33,9 @@ app.get('/health', (_req: Request, res: Response) => {
 
 // Upload route
 app.use('/upload', uploadRouter);
+
+// Analyze route
+app.use('/analyze', analyzeRouter);
 
 // Static files - serve after API routes
 app.use(express.static(path.join(__dirname, '../public')));

@@ -156,3 +156,56 @@ export interface AnalysisResult {
   error?: AnalysisError;
   tokensUsed?: number; // For cost tracking
 }
+
+/**
+ * User-provided details for product listing
+ * Optional fields that users can provide to enhance or override AI analysis
+ */
+export interface UserProvidedDetails {
+  // Basic information
+  condition?: ProductCondition;
+  brand?: string;
+  model?: string;
+  productType?: string;
+  description?: string;
+
+  // Attributes
+  color?: string[];
+  material?: string[];
+  size?: string;
+  year?: string;
+
+  // Category-specific details
+  categorySpecificDetails?: Record<string, string>;
+
+  // Additional context
+  notes?: string; // Internal notes not for listing
+  customTitle?: string; // User's preferred title
+  customKeywords?: string[]; // Additional keywords
+}
+
+/**
+ * Merged product data combining AI analysis and user inputs
+ * User-provided data takes precedence over AI predictions
+ */
+export interface MergedProductData extends ProductAnalysis {
+  // Track data sources
+  dataSources: {
+    productType: 'ai' | 'user' | 'merged';
+    brand: 'ai' | 'user' | 'merged';
+    condition: 'ai' | 'user' | 'merged';
+    attributes: 'ai' | 'user' | 'merged';
+    description: 'ai' | 'user' | 'merged';
+    title: 'ai' | 'user' | 'merged';
+  };
+
+  // User inputs (preserved separately)
+  userProvidedDetails?: UserProvidedDetails;
+
+  // Validation status
+  validationStatus: {
+    isComplete: boolean; // All required fields present
+    missingFields: string[]; // List of missing required fields
+    warnings: string[]; // Non-critical issues
+  };
+}
