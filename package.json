@@ -9,6 +9,7 @@
     "dev": "nodemon --exec ts-node src/server.ts",
     "test": "jest",
     "test:watch": "jest --watch",
+    "type-check": "tsc --noEmit && tsc --project tsconfig.test.json --noEmit",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
