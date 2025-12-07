@@ -9,6 +9,7 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
   HeadObjectCommand,
+  GetObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import {
@@ -319,7 +320,7 @@ export class StorageService {
       throw new Error('AWS S3 client not initialized');
     }
 
-    const command = new PutObjectCommand({
+    const command = new GetObjectCommand({
       Bucket: this.config.aws.bucket,
       Key: key,
     });
