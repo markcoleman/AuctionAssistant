@@ -10,4 +10,6 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],
   moduleFileExtensions: ['ts', 'js', 'json'],
+  // Run tests serially to avoid race conditions with shared uploads directory
+  maxWorkers: 1,
 };
