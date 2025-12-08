@@ -125,16 +125,17 @@ export function calculateBrandConfidence(
 ): ConfidenceScore {
   if (!analysis.brand) return 0;
 
-  let score = confidenceLevelToScore(analysis.brand.confidence);
+  const brand = analysis.brand;
+  let score = confidenceLevelToScore(brand.confidence);
 
   // High boost if brand is verified through logo/text
-  if (analysis.brand.verified) {
+  if (brand.verified) {
     score += 20;
   }
 
   // Boost if brand appears in extracted text
   const brandInText = analysis.extractedText.some((text) =>
-    text.text.toLowerCase().includes(analysis.brand!.name.toLowerCase())
+    text.text.toLowerCase().includes(brand.name.toLowerCase())
   );
   if (brandInText) score += 15;
 

@@ -140,14 +140,15 @@ GROUP BY DATE_TRUNC('day', created_at)
 ORDER BY date DESC;
 
 -- Sample data insertion function
+-- Note: Uses test UPC codes (000000000000-099999999999 reserved for testing)
 CREATE OR REPLACE FUNCTION insert_sample_products()
 RETURNS void AS $$
 BEGIN
     INSERT INTO product_cache (upc, product_name, brand, category, model, attributes)
     VALUES 
-        ('123456789012', 'iPhone 13 Pro', 'Apple', 'Electronics', 'A2483', '{"color": ["Graphite", "Gold", "Silver"], "storage": ["128GB", "256GB", "512GB", "1TB"]}'),
-        ('234567890123', 'Galaxy S21', 'Samsung', 'Electronics', 'SM-G991U', '{"color": ["Phantom Gray", "Phantom White"], "storage": ["128GB", "256GB"]}'),
-        ('345678901234', 'AirPods Pro', 'Apple', 'Electronics', 'MWP22AM/A', '{"color": ["White"], "features": ["Active Noise Cancellation", "Spatial Audio"]}')
+        ('000000000001', 'iPhone 13 Pro', 'Apple', 'Electronics', 'A2483', '{"color": ["Graphite", "Gold", "Silver"], "storage": ["128GB", "256GB", "512GB", "1TB"]}'),
+        ('000000000002', 'Galaxy S21', 'Samsung', 'Electronics', 'SM-G991U', '{"color": ["Phantom Gray", "Phantom White"], "storage": ["128GB", "256GB"]}'),
+        ('000000000003', 'AirPods Pro', 'Apple', 'Electronics', 'MWP22AM/A', '{"color": ["White"], "features": ["Active Noise Cancellation", "Spatial Audio"]}')
     ON CONFLICT (upc) DO NOTHING;
 END;
 $$ LANGUAGE plpgsql;

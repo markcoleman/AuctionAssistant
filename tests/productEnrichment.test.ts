@@ -240,9 +240,11 @@ describe('Product Enrichment Service', () => {
     });
 
     it('should include warnings for incomplete data', async () => {
-      const analysis = createMinimalAnalysis();
-      analysis.brand = undefined;
-      analysis.attributes = {};
+      const analysis: ProductAnalysis = {
+        ...createMinimalAnalysis(),
+        brand: undefined,
+        attributes: {},
+      };
 
       const enriched = await service.enrichProductAnalysis(analysis);
       const validation = service.validateEnrichedProduct(enriched);

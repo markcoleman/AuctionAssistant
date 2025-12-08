@@ -21,6 +21,13 @@ import {
 } from '../utils/confidenceScoring';
 
 /**
+ * Constants for enrichment service
+ */
+const MIN_DESCRIPTION_LENGTH = 20; // Minimum description length to be considered complete
+const SENTIMENT_DEFECT_PENALTY = 0.1; // Sentiment reduction per defect
+const SENTIMENT_KEYWORD_BOOST = 0.05; // Sentiment boost/reduction per keyword
+
+/**
  * Product database entry for caching known products
  */
 export interface ProductDatabaseEntry {
@@ -163,12 +170,17 @@ export class ProductEnrichmentService {
 
   /**
    * Extract UPC/barcode from text array
+   * Note: This is a basic pattern match. For production use, consider:
+   * - Validating UPC check digits using Luhn algorithm
+   * - Verifying EAN-13 check digit
+   * - Filtering out common false positives (phone numbers, etc.)
    * @param texts - Array of text strings
    * @returns UPC if found, undefined otherwise
    */
   private extractUPC(texts: string[]): string | undefined {
-    // UPC-A: 12 digits
-    // EAN-13: 13 digits
+    // UPC-A: 12 digits, EAN-13: 13 digits
+    // This basic pattern may match false positives and should be enhanced
+    // with check digit validation for production use
     const upcPattern = /\b\d{12,13}\b/;
 
     for (const text of texts) {
@@ -230,7 +242,7 @@ export class ProductEnrichmentService {
       ].filter(Boolean).length;
 
       // Each defect reduces sentiment
-      score -= defectCount * 0.1;
+      score -= defectCount * SENTIMENT_DEFECT_PENALTY;
 
       // Severity adjustment
       if (analysis.defects.severity === 'severe') {
@@ -242,9 +254,9 @@ export class ProductEnrichmentService {
       }
     }
 
-    // Analyze description for positive/negative keywords
+    // Analyze description for positive/negative keywords using Sets for efficiency
     const description = analysis.description.toLowerCase();
-    const positiveKeywords = [
+    const positiveKeywords = new Set([
       'excellent',
       'perfect',
       'pristine',
@@ -255,8 +267,8 @@ export class ProductEnrichmentService {
       'original',
       'warranty',
       'certified',
-    ];
-    const negativeKeywords = [
+    ]);
+    const negativeKeywords = new Set([
       'damage',
       'broken',
       'worn',
@@ -267,14 +279,15 @@ export class ProductEnrichmentService {
       'defect',
       'crack',
       'chip',
-    ];
+    ]);
 
+    // Single pass through description to check for keywords
     positiveKeywords.forEach((keyword) => {
-      if (description.includes(keyword)) score += 0.05;
+      if (description.includes(keyword)) score += SENTIMENT_KEYWORD_BOOST;
     });
 
     negativeKeywords.forEach((keyword) => {
-      if (description.includes(keyword)) score -= 0.05;
+      if (description.includes(keyword)) score -= SENTIMENT_KEYWORD_BOOST;
     });
 
     // Normalize to -1 to 1 range
@@ -302,7 +315,9 @@ export class ProductEnrichmentService {
       { name: 'category', value: analysis.category.primary, weight: 2 },
       {
         name: 'description',
-        value: analysis.description && analysis.description.length > 20,
+        value:
+          analysis.description &&
+          analysis.description.length > MIN_DESCRIPTION_LENGTH,
         weight: 2,
       },
       { name: 'suggestedTitle', value: analysis.suggestedTitle, weight: 2 },
