@@ -106,6 +106,13 @@ npm run format
 
 - `GET /` - Welcome message and API status
 - `GET /health` - Health check endpoint
+- `POST /upload` - Upload product images to cloud storage
+- `POST /analyze` - Analyze product photos with AI and merge with user details
+- `GET /analyze/health` - Check AI Vision service availability
+
+For detailed API documentation, see:
+- [Upload Endpoint Documentation](docs/UPLOAD_API.md) (if available)
+- [Description Helper System Documentation](docs/DESCRIPTION_HELPER_USAGE.md)
 
 ## CI/CD
 
