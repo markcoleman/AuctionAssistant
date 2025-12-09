@@ -433,6 +433,7 @@ describe('PostGenerationService', () => {
         status: 429,
         code: 'rate_limit_exceeded',
         message: 'Rate limit exceeded',
+        error: {}, // OpenAI error structure
       };
       mockCreate.mockRejectedValueOnce(apiError);
 

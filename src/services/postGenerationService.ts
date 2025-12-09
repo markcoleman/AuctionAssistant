@@ -4,6 +4,7 @@
  */
 
 import OpenAI from 'openai';
+import type { APIError } from 'openai/error';
 import { ProductAnalysis } from '../types/productAnalysis';
 import {
   MarketplaceTone,
@@ -469,34 +470,31 @@ export class PostGenerationService {
   }
 
   /**
-   * Handle errors
+   * Handle errors with improved OpenAI-specific error handling
    */
   private handleError(error: unknown): PostGenerationResult {
     let errorInfo: PostGenerationResult['error'];
 
-    if (
-      error &&
-      typeof error === 'object' &&
-      'status' in error &&
-      'code' in error
-    ) {
-      const apiError = error as {
-        status?: number;
-        code?: string;
-        message: string;
-      };
+    // Handle OpenAI API-specific errors
+    if (error && typeof error === 'object' && 'error' in error) {
+      const apiError = error as APIError;
       errorInfo = {
         code: apiError.code || 'OPENAI_API_ERROR',
         message: apiError.message,
-        retryable: apiError.status === 429 || (apiError.status ?? 0) >= 500,
+        retryable:
+          apiError.status === 429 || // Rate limit
+          apiError.status === 503 || // Service unavailable
+          (apiError.status ?? 0) >= 500, // Server errors
       };
     } else if (error instanceof Error) {
+      // Handle general JavaScript errors
       errorInfo = {
         code: 'GENERATION_ERROR',
         message: error.message,
         retryable: false,
       };
     } else {
+      // Handle unknown errors
       errorInfo = {
         code: 'UNKNOWN_ERROR',
         message: 'An unknown error occurred during post generation',

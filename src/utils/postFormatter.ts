@@ -4,12 +4,12 @@
  */
 
 /**
- * Character count limits for different post elements
+ * Character and word count limits for different post elements
  */
 export const CHARACTER_LIMITS = {
-  title: { min: 50, max: 80 },
-  description: { min: 200, max: 500 },
-  shortDescription: { min: 50, max: 150 },
+  title: { min: 50, max: 80 }, // Character limits for titles
+  description: { min: 200, max: 500 }, // Word limits for descriptions
+  shortDescription: { min: 50, max: 150 }, // Word limits for short descriptions
 };
 
 /**
@@ -147,11 +147,14 @@ export function countWords(text: string): number {
 
 /**
  * Count emojis in text
+ * Note: This uses a basic emoji regex that covers common emojis.
+ * For more comprehensive emoji detection, consider using a library like 'emoji-regex'
  */
 export function countEmojis(text: string): number {
-  // Regex to match emojis
+  // Basic emoji regex covering common Unicode ranges
+  // This includes: emoticons, misc symbols, dingbats, transport, and flags
   const emojiRegex =
-    /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
+    /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{231A}-\u{231B}\u{23E9}-\u{23EC}\u{25AA}-\u{25AB}\u{25B6}\u{25C0}\u{2934}-\u{2935}]/gu;
   const matches = text.match(emojiRegex);
   return matches ? matches.length : 0;
 }
