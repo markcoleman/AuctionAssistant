@@ -219,7 +219,10 @@ export function suggestEmojis(
   // Add condition-based emojis
   if (condition) {
     const conditionLower = condition.toLowerCase();
-    if (conditionLower.includes('new') || conditionLower.includes('excellent')) {
+    if (
+      conditionLower.includes('new') ||
+      conditionLower.includes('excellent')
+    ) {
       suggested.push(...EMOJI_CATEGORIES.excellent.slice(0, 1));
     } else if (conditionLower.includes('good')) {
       suggested.push(...EMOJI_CATEGORIES.good.slice(0, 1));
@@ -228,7 +231,9 @@ export function suggestEmojis(
 
   // Add general attention emoji if we need more
   if (suggested.length < count) {
-    suggested.push(...EMOJI_CATEGORIES.attention.slice(0, count - suggested.length));
+    suggested.push(
+      ...EMOJI_CATEGORIES.attention.slice(0, count - suggested.length)
+    );
   }
 
   // Remove duplicates and limit to requested count
@@ -280,10 +285,7 @@ export function normalizeExclamation(text: string): string {
 /**
  * Truncate text to word limit while preserving sentences
  */
-export function truncateToWordLimit(
-  text: string,
-  maxWords: number
-): string {
+export function truncateToWordLimit(text: string, maxWords: number): string {
   const words = text.split(/\s+/);
   if (words.length <= maxWords) return text;
 

@@ -130,7 +130,7 @@ function getStyleGuidelines(style: DescriptionStyle): string {
     [DescriptionStyle.FEATURE_FOCUSED]:
       'Emphasize technical specifications, features, and what the product includes',
     [DescriptionStyle.BENEFIT_FOCUSED]:
-      'Focus on how the product will improve the buyer\'s life and solve their problems',
+      "Focus on how the product will improve the buyer's life and solve their problems",
     [DescriptionStyle.STORY_BASED]:
       'Tell a story about the product, its history, or how it can be used in daily life',
     [DescriptionStyle.CONCISE]:
@@ -276,9 +276,7 @@ export function getRecommendedTone(
   }
 
   // Poor condition items should focus on value
-  if (
-    [ProductCondition.POOR, ProductCondition.FOR_PARTS].includes(condition)
-  ) {
+  if ([ProductCondition.POOR, ProductCondition.FOR_PARTS].includes(condition)) {
     return MarketplaceTone.BARGAIN;
   }
 
@@ -301,7 +299,12 @@ export function getRecommendedTone(
  * Generate a marketplace-specific formatting prompt
  */
 export function getFormattingPrompt(
-  marketplace: 'facebook' | 'ebay' | 'craigslist' | 'offerup' | 'generic' = 'generic'
+  marketplace:
+    | 'facebook'
+    | 'ebay'
+    | 'craigslist'
+    | 'offerup'
+    | 'generic' = 'generic'
 ): string {
   const marketplaceGuidelines: Record<string, string> = {
     facebook:
@@ -311,7 +314,8 @@ export function getFormattingPrompt(
       'Craigslist: Simple format, no emojis, focus on price and condition, include contact info',
     offerup:
       'OfferUp: Casual friendly tone, use emojis, highlight condition and price, mention meetup',
-    generic: 'General Marketplace: Balanced professional-casual tone, universal appeal',
+    generic:
+      'General Marketplace: Balanced professional-casual tone, universal appeal',
   };
 
   return marketplaceGuidelines[marketplace];

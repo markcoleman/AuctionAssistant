@@ -153,9 +153,8 @@ export class PostGenerationService {
       totalTokens += descriptionResult.tokensUsed || 0;
 
       // Generate selling points
-      const sellingPointsResult = await this.generateSellingPoints(
-        productAnalysis
-      );
+      const sellingPointsResult =
+        await this.generateSellingPoints(productAnalysis);
       totalTokens += sellingPointsResult.tokensUsed || 0;
 
       // Suggest emojis
@@ -456,12 +455,10 @@ export class PostGenerationService {
         return await this.generateTitle(productAnalysis, tone);
 
       case 'description':
-        return await this.generateDescription(
-          productAnalysis,
-          tone,
-          style,
-          { min: 200, max: 500 }
-        );
+        return await this.generateDescription(productAnalysis, tone, style, {
+          min: 200,
+          max: 500,
+        });
 
       case 'sellingPoints':
         return await this.generateSellingPoints(productAnalysis);

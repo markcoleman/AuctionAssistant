@@ -147,7 +147,8 @@ describe('PostGenerationService', () => {
 
   describe('generateDescription', () => {
     it('should generate a description', async () => {
-      const mockDescription = 'This is a great iPhone in excellent condition...';
+      const mockDescription =
+        'This is a great iPhone in excellent condition...';
       mockCreate.mockResolvedValueOnce({
         choices: [{ message: { content: mockDescription } }],
         usage: { total_tokens: 200 },
@@ -215,7 +216,9 @@ describe('PostGenerationService', () => {
 
     it('should accept custom max points', async () => {
       mockCreate.mockResolvedValueOnce({
-        choices: [{ message: { content: '["Point 1", "Point 2", "Point 3"]' } }],
+        choices: [
+          { message: { content: '["Point 1", "Point 2", "Point 3"]' } },
+        ],
         usage: { total_tokens: 60 },
       });
 
@@ -411,10 +414,7 @@ describe('PostGenerationService', () => {
       });
 
       const analysis = createMockProductAnalysis();
-      const result = await service.regenerateElement(
-        analysis,
-        'sellingPoints'
-      );
+      const result = await service.regenerateElement(analysis, 'sellingPoints');
 
       expect(Array.isArray(result.content)).toBe(true);
     });
