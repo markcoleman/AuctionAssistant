@@ -23,7 +23,7 @@
     "@aws-sdk/s3-request-presigner": "^3.966.0",
     "@azure/storage-blob": "^12.29.1",
     "@types/multer": "^2.0.0",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "multer": "^2.0.2",
     "openai": "^6.17.0",
